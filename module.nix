@@ -24,7 +24,7 @@ in
         };
       };
     };
-    # enable mysql and declare op-energy DB
+    # enable graylog-zabbix service
     systemd.services = {
       graylog-zabbix = {
         wantedBy = [ "multi-user.target" ];
