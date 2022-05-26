@@ -10,9 +10,20 @@ in
 
   config = lib.mkIf cfg.enable {
     nixpkgs.overlays = [
-      graylog-zabbix-overlay # add op-energy-backend into context
+      graylog-zabbix-overlay # add graylog-zabbix
     ];
     environment.systemPackages = [ ];
+    services.logrotate = {
+      enable = true;
+      paths = {
+        graylog-zabbix = {
+          path = "/var/log/graylog-zabbix/*.log";
+          frequency = "daily";
+          keep = 14;
+          priority = 1;
+        };
+      };
+    };
     # enable mysql and declare op-energy DB
     systemd.services = {
       graylog-zabbix = {
