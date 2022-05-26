@@ -4,6 +4,9 @@ let
   graylog-zabbix-overlay = import ./overlay.nix;
 
   cfg = config.services.graylog-zabbix;
+  catOrEmpty = pkgs.writeScriptBin "catOrEmpty" ''
+    cat "$1" 2>/dev/null || echo ""
+  '';
 in
 {
   options.services.graylog-zabbix.enable = lib.mkEnableOption "";
@@ -12,7 +15,13 @@ in
     nixpkgs.overlays = [
       graylog-zabbix-overlay # add graylog-zabbix
     ];
-    environment.systemPackages = [ ];
+    environment.systemPackages = [ catOrEmpty ];
+    services.zabbixAgent.settings = {
+      UserParameter = [
+        "local.graylog.sp-testnet-sstp-event-count.last,catOrEmpty /var/log/graylog-zabbix/sp-testnet-event | wc -l"
+        "local.graylog.sp-testnet-sstp-event-count.count,catOrEmpty /var/log/graylog-zabbix/sp-testnet-event | tail -n 1"
+      ];
+    };
     services.logrotate = {
       enable = true;
       paths = {
@@ -44,6 +53,20 @@ in
           graylog-zabbix +RTS -s
         '';
       };
+      zabbix-agent = {
+        path = with pkgs; [
+          catOrEmpty
+        ];
+        serviceConfig = {
+          PrivateTmp = lib.mkOverride 0 false; # we need to access some stats for UserParameter
+        };
+      };
+    };
+    users.users.zabbix-agent = {
+      extraGroups = [
+      ];
+      isSystemUser = lib.mkOverride 0 false;
+      isNormalUser = true;
     };
   };
 }
