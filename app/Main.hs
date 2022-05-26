@@ -89,7 +89,7 @@ serveQueue logDir queue = do
   case mline of
     Nothing-> return ()
     Just (Event title timestamp message) -> do
-      T.appendFile (T.unpack (logDir `T.append` "/" `T.append` title `T.append` ".log")) message
+      T.appendFile (T.unpack (logDir `T.append` "/" `T.append` title `T.append` ".log")) (timestamp `T.append` ": " `T.append` message `T.append` "\n")
       serveQueue logDir queue
 
 main :: IO ()
