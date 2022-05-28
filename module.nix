@@ -7,6 +7,9 @@ let
   catOrEmpty = pkgs.writeScriptBin "catOrEmpty" ''
     cat "$1" 2>/dev/null || echo ""
   '';
+  grepOrEmpty = pkgs.writeScriptBin "grepOrEmpty" ''
+    grep "$1" 2>/dev/null || echo ""
+  '';
 in
 {
   options.services.graylog-zabbix.enable = lib.mkEnableOption "";
@@ -15,7 +18,7 @@ in
     nixpkgs.overlays = [
       graylog-zabbix-overlay # add graylog-zabbix
     ];
-    environment.systemPackages = [ catOrEmpty ];
+    environment.systemPackages = [ catOrEmpty grepOrEmpty ];
     services.zabbixAgent.settings = {
       UserParameter = [
         "local.graylog.sp-testnet-sstp-event-count.count,catOrEmpty /var/log/graylog-zabbix/sp-testnet-sstp-event.log | wc -l"
@@ -60,6 +63,7 @@ in
       zabbix-agent = {
         path = with pkgs; [
           catOrEmpty
+          grepOrEmpty
         ];
         serviceConfig = {
           PrivateTmp = lib.mkOverride 0 false; # we need to access some stats for UserParameter
