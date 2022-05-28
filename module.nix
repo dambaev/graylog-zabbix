@@ -20,6 +20,10 @@ in
       UserParameter = [
         "local.graylog.sp-testnet-sstp-event-count.count,catOrEmpty /var/log/graylog-zabbix/sp-testnet-sstp-event.log | wc -l"
         "local.graylog.sp-testnet-sstp-event-count.last,catOrEmpty /var/log/graylog-zabbix/sp-testnet-sstp-event.log | tail -n 1"
+        "local.graylog.sp-testnet-sstp-event-count.disconnected.count,catOrEmpty /var/log/graylog-zabbix/sp-testnet-sstp-event.log | grepOrEmpty 'disconnected' | wc -l"
+        "local.graylog.sp-testnet-sstp-event-count.connected.count,catOrEmpty /var/log/graylog-zabbix/sp-testnet-sstp-event.log | grepOrEmpty ' connected' | wc -l"
+        "local.graylog.sp-testnet-sstp-event-count.disconnected.last,catOrEmpty /var/log/graylog-zabbix/sp-testnet-sstp-event.log | grepOrEmpty 'disconnected' | tail -n 1"
+        "local.graylog.sp-testnet-sstp-event-count.connected.last,catOrEmpty /var/log/graylog-zabbix/sp-testnet-sstp-event.log | grepOrEmpty ' connected' | tail -n 1"
       ];
     };
     services.logrotate = {
