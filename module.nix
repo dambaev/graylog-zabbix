@@ -18,8 +18,8 @@ in
     environment.systemPackages = [ catOrEmpty ];
     services.zabbixAgent.settings = {
       UserParameter = [
-        "local.graylog.sp-testnet-sstp-event-count.count,catOrEmpty /var/log/graylog-zabbix/sp-testnet-event | wc -l"
-        "local.graylog.sp-testnet-sstp-event-count.last,catOrEmpty /var/log/graylog-zabbix/sp-testnet-event | tail -n 1"
+        "local.graylog.sp-testnet-sstp-event-count.count,catOrEmpty /var/log/graylog-zabbix/sp-testnet-sstp-event | wc -l"
+        "local.graylog.sp-testnet-sstp-event-count.last,catOrEmpty /var/log/graylog-zabbix/sp-testnet-sstp-event | tail -n 1"
       ];
     };
     services.logrotate = {
