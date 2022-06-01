@@ -79,7 +79,7 @@ in
         wantedBy = [ "multi-user.target" ];
         before = [ "zabbix-agent.service" ];
         serviceConfig = {
-          Type = "one-shot";
+          Type = "oneshot";
           RemainAfterExit = true;
         };
         script = ''
